@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SEeIOT - Exercise 01</string>
+    <string name="username_field_label">Username :</string>
+    <string name="password_field_label">Password :</string>
+    <string name="login_button_label">Login</string>
+    <string name="start_monitoring_button_label">Start Monitoring</string>
+    <string name="stop_monitoring_button_label">Stop Monitoring</string>
+</resources>

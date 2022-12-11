@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidExample00</string>
+    <string name="username">Username</string>
+    <string name="confirm">Confirm</string>
+</resources>

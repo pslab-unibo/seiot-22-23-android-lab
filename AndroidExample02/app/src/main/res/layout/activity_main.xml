@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/counterLabel1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/counter_label_sample_text"
+        android:textAlignment="center"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/upButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1pt"
+            android:layout_marginRight="1pt"
+            android:layout_weight="1"
+            android:text="@string/up_button_text"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/downButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/down_button_text"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/stopButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1pt"
+            android:layout_marginRight="1pt"
+            android:layout_weight="1"
+            android:text="@string/stop_button_text"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/counterLabel2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/counter_label_sample_text"
+        android:textAlignment="center"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/upButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1pt"
+            android:layout_marginRight="1pt"
+            android:layout_weight="1"
+            android:text="@string/up_button_text"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/downButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/down_button_text"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/stopButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1pt"
+            android:layout_marginRight="1pt"
+            android:layout_weight="1"
+            android:text="@string/stop_button_text"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/counterLabel3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/counter_label_sample_text"
+        android:textAlignment="center"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/upButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1pt"
+            android:layout_marginRight="1pt"
+            android:layout_weight="1"
+            android:text="@string/up_button_text"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/downButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/down_button_text"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/stopButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1pt"
+            android:layout_marginRight="1pt"
+            android:layout_weight="1"
+            android:text="@string/stop_button_text"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
+
+</LinearLayout>

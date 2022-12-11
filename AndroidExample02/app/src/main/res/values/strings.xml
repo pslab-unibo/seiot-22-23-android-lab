@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AndroidExample02</string>
+    <string name="counter_label_sample_text">000</string>
+    <string name="up_button_text">UP</string>
+    <string name="down_button_text">DOWN</string>
+    <string name="stop_button_text">STOP</string>
+</resources>
