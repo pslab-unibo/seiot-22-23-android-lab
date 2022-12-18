@@ -1,7 +1,12 @@
 #include "Arduino.h"
 #include "MsgService.h"
+#include "SoftwareSerial.h"
+
+#define RX_PIN 2  // to be connected to TX of the BT module
+#define TX_PIN 3  // to be connected to RX of the BT module
 
 String content;
+SoftwareSerial channel(RX_PIN, TX_PIN);
 
 MsgServiceSerial MsgService;
 MsgServiceBluetooth MsgServiceBT;
@@ -51,7 +56,7 @@ Msg* MsgServiceBluetooth::receiveMsg(){
 }
 
 void MsgServiceBluetooth::init(){
-  Serial.begin(9600);
+  channel.begin(9600);
   content.reserve(128);
   content = "";
   currentMsg = NULL;
@@ -59,35 +64,36 @@ void MsgServiceBluetooth::init(){
 }
 
 void MsgServiceBluetooth::sendMsg(const String& msg){
-  Serial.println(msg+"$");  
+  Serial.println(msg);  
 }
 
 
 void readSerialMessage(bool useBT, bool useSerial){
-  while (Serial.available()) {
-    char ch = (char) Serial.read();
-    if (ch == '\n'){      
-      if (content.length() > 0) {
-        int index = content.indexOf('$');        
-        if (index != -1){
-          if(useBT){
-            content = content.substring(0,index);
-            MsgServiceBT.currentMsg = new Msg(content);
-            MsgServiceBT.msgAvailable = true;  
-          } else {
-            content = "";    
-          }
-        } else {
-            if(useSerial){
-              MsgService.currentMsg = new Msg(content);
-              MsgService.msgAvailable = true;
-            } else {
-              content="";
-            }
+  if(useSerial){
+    while (Serial.available()) {
+      char ch = (char) Serial.read();
+      if (ch == '\n'){      
+        if (content.length() > 0) {
+            MsgService.currentMsg = new Msg(content);
+            MsgService.msgAvailable = true;
         }
+      } else {
+        content += ch;      
       }
-    } else {
-      content += ch;      
+    }
+  }
+  if(useBT){
+    while (channel.available()) {
+      char ch = (char) channel.read();
+      if (ch == '\n'){   
+        if (content.length() > 0) {
+            content.trim();
+            MsgServiceBT.currentMsg = new Msg(content);
+            MsgServiceBT.msgAvailable = true;
+        }
+      } else {
+        content += ch;      
+      }
     }
   }
 }

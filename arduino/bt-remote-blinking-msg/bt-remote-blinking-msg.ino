@@ -13,7 +13,6 @@ void setup() {
   Serial.println("ready to go.");   
 }
 
-
 void loop() {
   if (MsgServiceBT.isMsgAvailable()) {
     Msg* msg = MsgServiceBT.receiveMsg();
