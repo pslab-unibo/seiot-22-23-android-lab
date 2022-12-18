@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void createAndStartCounters() {
         for (int i = 0; i < COUNTER_NUMBER; i++) {
-            Counter counter = CounterFactory.create(CounterType.RUN_ON_UI, counterLabels.get(i), this);
+            Counter counter = CounterFactory.create(CounterType.HANDLER, counterLabels.get(i), this);
             counters.add(counter);
             new Thread(counter).start();
         }
