@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -29,9 +30,11 @@ public class ScanActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 1234;
     private static final int REQUEST_PERMISSION_CONNECT = 758;
     private static final int REQUEST_PERMISSION_SCAN = 759;
-
+    private static final int LEGACY_REQUEST_PERMISSION_BLUETOOTH = 555;
+    private static final int REQUEST_PERMISSION_ADMIN = 556;
 
     public static final String X_BLUETOOTH_DEVICE_EXTRA = "X_BLUETOOTH_DEVICE_EXTRA";
+
 
     private List<BluetoothDevice> scannedDevices = new ArrayList<>();
     private List<String> scannedNameList = new ArrayList<>();
@@ -131,24 +134,38 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            //do not ask for permissions on resume otherwise you will get in a loop!
-            displayError("Please grant permissions first");
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S){
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                //do not ask for permissions on resume otherwise you will get in a loop!
+                displayError("Please grant legacy permissions first");
+            } else {
+                checkPairedDevices();
+            }
         } else {
-            pairedDevices.clear();
-            pairedNameList.clear();
-            runOnUiThread(() -> pairedListAdapter.notifyDataSetChanged());
-            pairedDevices.addAll(btAdapter.getBondedDevices());
-            if (pairedDevices.size() > 0) {
-                // There are paired devices. Get the name and address of each paired device.
-                for (BluetoothDevice device : pairedDevices) {
-                    if(device.getName()!= null){
-                        this.pairedNameList.add(device.getName());
-                    } else {
-                        this.pairedNameList.add(device.getAddress());
-                    }
-                    runOnUiThread(() -> pairedListAdapter.notifyDataSetChanged());
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                //do not ask for permissions on resume otherwise you will get in a loop!
+                displayError("Please grant permissions first");
+            } else {
+                checkPairedDevices();
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void checkPairedDevices(){
+        pairedDevices.clear();
+        pairedNameList.clear();
+        runOnUiThread(() -> pairedListAdapter.notifyDataSetChanged());
+        pairedDevices.addAll(btAdapter.getBondedDevices());
+        if (pairedDevices.size() > 0) {
+            // There are paired devices. Get the name and address of each paired device.
+            for (BluetoothDevice device : pairedDevices) {
+                if(device.getName()!= null){
+                    this.pairedNameList.add(device.getName());
+                } else {
+                    this.pairedNameList.add(device.getAddress());
                 }
+                runOnUiThread(() -> pairedListAdapter.notifyDataSetChanged());
             }
         }
     }
@@ -166,8 +183,10 @@ public class ScanActivity extends AppCompatActivity {
 
     private void startScanning() {
         //ask the scanning permission when needed
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_SCAN}, REQUEST_PERMISSION_SCAN);
+        String permission = Build.VERSION.SDK_INT <= Build.VERSION_CODES.S ? Manifest.permission.BLUETOOTH_ADMIN : Manifest.permission.BLUETOOTH_SCAN;
+        int reqID = Build.VERSION.SDK_INT <= Build.VERSION_CODES.S ? REQUEST_PERMISSION_ADMIN : REQUEST_PERMISSION_SCAN;
+        if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{permission}, reqID);
             return;
         } else {
             //empty lists
@@ -187,14 +206,29 @@ public class ScanActivity extends AppCompatActivity {
     /* ================== PERMISSION MANAGEMENT ========================== */
 
     private void checkPermissionAndEnableBluetooth(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_PERMISSION_CONNECT);
-        } else {
-            if (!btAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S){
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED
+             || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.ACCESS_FINE_LOCATION}, LEGACY_REQUEST_PERMISSION_BLUETOOTH);
             } else {
-                this.scanButton.setEnabled(true);
+                if (!btAdapter.isEnabled()) {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                } else {
+                    this.scanButton.setEnabled(true);
+                }
+            }
+        } else {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_PERMISSION_CONNECT);
+            } else {
+                if (!btAdapter.isEnabled()) {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                } else {
+                    this.scanButton.setEnabled(true);
+                }
             }
         }
     }
@@ -216,12 +250,18 @@ public class ScanActivity extends AppCompatActivity {
                 }
                 break;
             case REQUEST_PERMISSION_SCAN:
+            case REQUEST_PERMISSION_ADMIN:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //go back at scanning after receiving the permission
                     startScanning();
                 } else {
                     displayError( "You need to grant bluetooth scan permission to use this feature");
                 }
+                break;
+            case LEGACY_REQUEST_PERMISSION_BLUETOOTH:
+                if(grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)
+                    logMessage("legacy ok");
+                    checkPermissionAndEnableBluetooth();
                 break;
             default:
                 logMessage("result of unknown activity request");
