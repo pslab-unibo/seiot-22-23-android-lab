@@ -134,7 +134,7 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S){
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
                 //do not ask for permissions on resume otherwise you will get in a loop!
                 displayError("Please grant legacy permissions first");
@@ -183,8 +183,8 @@ public class ScanActivity extends AppCompatActivity {
 
     private void startScanning() {
         //ask the scanning permission when needed
-        String permission = Build.VERSION.SDK_INT <= Build.VERSION_CODES.S ? Manifest.permission.BLUETOOTH_ADMIN : Manifest.permission.BLUETOOTH_SCAN;
-        int reqID = Build.VERSION.SDK_INT <= Build.VERSION_CODES.S ? REQUEST_PERMISSION_ADMIN : REQUEST_PERMISSION_SCAN;
+        String permission = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ? Manifest.permission.BLUETOOTH_ADMIN : Manifest.permission.BLUETOOTH_SCAN;
+        int reqID = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ? REQUEST_PERMISSION_ADMIN : REQUEST_PERMISSION_SCAN;
         if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{permission}, reqID);
             return;
@@ -206,7 +206,7 @@ public class ScanActivity extends AppCompatActivity {
     /* ================== PERMISSION MANAGEMENT ========================== */
 
     private void checkPermissionAndEnableBluetooth(){
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S){
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED
              || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             ) {
