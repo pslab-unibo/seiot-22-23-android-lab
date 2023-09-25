@@ -37,10 +37,10 @@ There are two ways you can use the RemoteBlinkApp:
 1. Connect the Bluetooth module to Arduino. Please check that you connected the wires correctly on the RX and TX pins. TX of Arduino needs to be connected to RX on the bluetooth module and vice-versa. 
 2. Setup your AT module using the [AT mode util](./arduino/at-mode-HC05/at-mode-HC05.ino)
 3. Load the code on Arduino:
-   - [bt-remote-blinking](./arduino/bt-remote-blinking/bt-remote-blinking) shows how to read directly from the bluetooth serial.
-   - [bt-remote-blinking-msg](./arduino/bt-remote-blinking-msg/bt-remote-blinking-msg) uses a MessageService class that encapsulate the use of serial communication. This is useful to use both the serial and the bluetooth at the same time.
+   - [bt-remote-blinking](./arduino/bt-remote-blinking) shows how to read directly from the bluetooth serial.
+   - [bt-remote-blinking-msg](./arduino/bt-remote-blinking-msg) uses a MessageService class that encapsulate the use of serial communication. This is useful to use both the serial and the bluetooth at the same time.
    Check the `readSerialMessage(bool useBluetooth, bool useSerial) to understand the behaviour of this class and how to use it.
-4. Install the [`RemoteBlinkApp`](./RemoteBlinkApp) on your Android Device.
+4. Install the [RemoteBlinkApp](./RemoteBlinkApp) on your Android Device.
 5. Turn Bluetooth On.
 6. Follow the steps on the app:
    - Scan for devices
@@ -51,9 +51,9 @@ There are two ways you can use the RemoteBlinkApp:
 ## Use app with Android emulator on AndroidStudio
 1. Connect Arduino to the USB serial, you won't need the bluetooth module for this.
 3. Load the code on Arduino:
-   - [emu-remote-blinking](./arduino/bt-remote-blinking/emu-remote-blinking) shows how to connect to read from the serial _faking_ the existence of two separate channels by using a special character (`$`) to discriminate the source of the message. Check the `readSerialMessage(bool useBluetooth, bool useSerial) to understand the behaviour of this class and how to use it and note how it's different from the Bluetooth implementation.
-4. Start the [`emulator-serial-adapter`](./emulator-serial-adapter) this will open a socket on your local machine that will wait for messages and redirect them to the serial appending the special character (`$`) to each message.
-5. Start the [`RemoteBlinkApp`](./RemoteBlinkApp) on the Android emulator and follow this steps:
+   - [emu-remote-blinking](./arduino/emu-remote-blinking) shows how to connect to read from the serial _faking_ the existence of two separate channels by using a special character (`$`) to discriminate the source of the message. Check the `readSerialMessage(bool useBluetooth, bool useSerial) to understand the behaviour of this class and how to use it and note how it's different from the Bluetooth implementation.
+4. Start the [emulator-serial-adapter](./emulator-serial-adapter) this will open a socket on your local machine that will wait for messages and redirect them to the serial appending the special character (`$`) to each message.
+5. Start the [RemoteBlinkApp](./RemoteBlinkApp) on the Android emulator and follow this steps:
    - click on the emulator button on the bottom of the screen, you won't need to pair with any bluetooth device since you're using the serial
    - The `LedSwitchEmulatedActivity` will open check the code here to extend it for your assignments
    - You should be able to turn the led on and off
